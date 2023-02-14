@@ -1,25 +1,21 @@
-IF EXISTS DROP tracker_db;
+DROP DATABASE IF EXISTS tracker_db;
 CREATE DATABASE tracker_db;
 USE tracker_db;
-
-DROP IF TABLE EXISTS departments,
-                     roles,
-                     employees;
 
 
 CREATE TABLE departments (
 
-    department_name    VARCHAR(30)  NOT NULL,
-    department_id      INT          NOT NULL,
-
+    department_id INT NOT NULL,
+    department_name VARCHAR(30) NOT NULL
+    
 );
 
 CREATE TABLE roles (
 
-    job_title       VARCHAR(30)     NOT NULL,
     role_id         INT             NOT NULL,
+    job_title       VARCHAR(30)     NOT NULL,
     department      VARCHAR(30)     NOT NULL,
-    salary          INT             NOT NULL,
+    salary          INT             NOT NULL
 
 );
 
@@ -31,8 +27,8 @@ CREATE TABLE employees (
     job_title       VARCHAR(30)     NOT NULL,
     department      VARCHAR(30)     NOT NULL,
     salary          INT             NOT NULL,
-    manager         VARCHAR(30)     NOT NULL,
+    manager         VARCHAR(30)     NOT NULL
 
-)
+);
 
 

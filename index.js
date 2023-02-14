@@ -1,7 +1,6 @@
 //Include Prompts
 const prompts = require("./src/prompts");
 
-
 // Import and require mysql2 & express
 const express = require('express');
 const mysql = require('mysql2');
@@ -17,17 +16,12 @@ app.use(express.json());
 const db = mysql.createConnection(
     {
       host: 'localhost',
-      // MySQL Username
       user: 'root',
-      // TODO: Add MySQL Password
       password: 'password123',
-      database: 'employeeTracker_db'
+      database: 'tracker_db'
     },
     console.log(`Connected to the employeeTracker_db database.`)
   );
-
-
-console.log("Server file triggered");
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
@@ -35,20 +29,22 @@ app.listen(PORT, () => {
 
 //--------------------Master Prompts / Request User Direction------------------------
 
+db.query('SOURCE schema.sql');
 
 
-async function userRequest(){
+
+// async function userRequest(){
 
    
 
-    welcomeResponse = await prompts.welcomePrompts();
+//     welcomeResponse = await prompts.welcomePrompts();
 
-    console.log(welcomeResponse);
-
-
+//     console.log(welcomeResponse);
 
 
-}
 
-userRequest();
+
+// }
+
+// userRequest();
 
