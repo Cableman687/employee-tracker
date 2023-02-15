@@ -11,13 +11,14 @@ async function welcomePrompts() {
             name: 'welcomePrompts',
             message: 'What would you like to do? ',
             choices: [
+                'View All Departments',
+                'View All Roles',
                 'View All Employees',
+                'Add Department',
+                'Add Role',
                 'Add Employee',
                 'Update Employee Role',
-                'View All Roles',
-                'Add Role',
-                'View All Departments',
-                'Add Department',
+ 
             ],
             default: 'I dont want to add any more team members'     
         },
