@@ -5,22 +5,20 @@ USE tracker_db;
 
 CREATE TABLE departments (
 
-    id INT NOT NULL PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     department_name VARCHAR(30) NOT NULL
-   
 
-    
 );
 
 CREATE TABLE roles (
 
-    id              INT                         PRIMARY KEY,
-    job_title       VARCHAR(30)     NOT NULL,
-    department_id   INT             NOT NULL,
-    salary          DECIMAL         NOT NULL,
+    id              INT AUTO_INCREMENT            PRIMARY KEY,
+    job_title       VARCHAR(30)         NOT NULL,
+    department_id   INT                         ,
+    salary          DECIMAL             NOT NULL,
     FOREIGN KEY (department_id)
     REFERENCES departments(id)
-    
+    ON DELETE SET NUll
     
     
 
@@ -28,22 +26,21 @@ CREATE TABLE roles (
 
 CREATE TABLE employees (
 
-    id              INT             NOT NULL    PRIMARY KEY,
+    id              INT AUTO_INCREMENT            PRIMARY KEY,
     first_name      VARCHAR(30)     NOT NULL,
     last_name       VARCHAR(30)     NOT NULL,
-    role_id         INT             NOT NULL,
-    manager_id      INT             NOT NULL,
-    FOREIGN KEY (role_id)
+    role_id         INT                     ,
+    manager_id      INT                     ,
+    FOREIGN KEY(role_id)
     REFERENCES roles(id)
-    -- FOREIGN KEY(manager_id)
-    -- REFERENCES employees(employee_id)
+    ON DELETE SET NULL,
+    FOREIGN KEY(manager_id)
+    REFERENCES employees(id)
+    ON DELETE SET NULL
+    
     
 
 );
 
--- job_title       VARCHAR(30)     NOT NULL,
--- department      VARCHAR(30)     NOT NULL,
--- salary          INT             NOT NULL,
--- manager         VARCHAR(30)     NOT NULL
 
 
