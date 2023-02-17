@@ -51,7 +51,7 @@ async function addDepartmentPrompts() {
             type: 'input',
             name: 'addDepartmentPrompts',
             message: 'What is the name of the department? ',
-            default: 'None'     
+                 
         },
     ])
     .then((userChoice) => {
@@ -77,20 +77,20 @@ async function addRolePrompts(departmentArray) {
             type: 'input',
             name: 'roleName',
             message: 'What is the name of the Role? ',
-            default: 'default'     
+                 
         },
         {
             type: 'input',
             name: 'roleSalary',
             message: 'What is the salary of the Role? ',
-            default: '0'     
+               
         },
         {
             type: 'list',
             name: 'roleDepartment',
             message: 'Which department does the role belong to? ',
             choices: departmentArray,
-            default: 'Sales'     
+                 
         },
     ])
     .then((response) => {
@@ -116,20 +116,20 @@ async function addEmployeePrompts(roleList, managerList) {
             type: 'input',
             name: 'employeeFirstName',
             message: 'What is the employees first name? ',
-            default: 'default'     
+                 
         },
         {
             type: 'input',
             name: 'employeeLastName',
             message: 'What is the employees last name? ',
-            default: '0'     
+                 
         },
         {
             type: 'list',
             name: 'employeeRole',
             message: 'What is the employees role? ',
             choices: roleList,
-            default: 'default'     
+                 
         },
         {
             type: 'list',
@@ -164,14 +164,14 @@ async function updateEmployeePrompts(nameArray, roleArray) {
             name: 'selectEmployee',
             message: 'Which employees role would you like to update? ',
             choices: nameArray,
-            default: 'default'     
+                 
         },
         {
             type: 'list',
             name: 'selectRole',
             message: 'Which role do you want to assign the selected employee? ',
             choices: roleArray,
-            default: 'None'     
+                
         },
     ])
     .then((response) => {
