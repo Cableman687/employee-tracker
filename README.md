@@ -25,6 +25,8 @@ https://coding-boot-camp.github.io/full-stack/nodejs/how-to-install-nodejs
 
 ## Usage
 
+https://drive.google.com/file/d/1SGTvvDyiQQDrm4PGTMDDGOWALJ0a48va/view
+
 1) Create the database by running mysql -u root -p and entering your password.
 2) Seed the database by running SOURCE schema.sql
 3) Navigate to the root folder, and run 'npm start'
