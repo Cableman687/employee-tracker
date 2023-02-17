@@ -36,20 +36,18 @@ app.listen(PORT, () => {
 
 
 
-async function masterSwitch(){
 
-  let welcomeRequest = await prompts.welcomePrompts();
+async function masterSwitch(welcomeRequest){
+  
   let roleTable;
   let roleIndex;
   let employeeTable;
   let employeeIndex;
   let updateTable;
-  let updateIndex;
   let roleArray = [];
+  
 
-  console.log(welcomeRequest.welcomePrompts);
-
-  switch(welcomeRequest.welcomePrompts) {
+  switch(welcomeRequest.masterPrompts) {
 
     
 
@@ -78,25 +76,42 @@ async function masterSwitch(){
       break;
     
     case "Add Role":
-      let role = await prompts.addRolePrompts();
-      // console.log(role.roleDepartment);
+      let departmentArray = [];
 
-      db.query('SELECT * FROM departments', async function (err, results) {
-        roleTable = results;
-        // console.log(roleTable);
-  
-        for(const element of roleTable){
-          if(element.department_name == role.roleDepartment){
-            
-            roleIndex = element.id;
-            // console.log(roleIndex);
+      async function getDepartments(){
+        db.query('SELECT department_name FROM departments', async function (err, results) {
+
+          for(const element of results){
+
+            departmentArray.push(element.department_name);
+
           }
-        }
 
-        db.query(await queries.addRole(role, roleIndex) , function (err, results) {
+          let role = await prompts.addRolePrompts(departmentArray);
+
+          
+
+          db.query('SELECT * FROM departments', async function (err, results) {
+          roleTable = results;
+          
+  
+          for(const element of roleTable){
+            if(element.department_name == role.roleDepartment){
+              
+              roleIndex = element.id;
+              
+            }
+          }
+
+          db.query(await queries.addRole(role, roleIndex) , function (err, results) {
           console.log("Role Added");
         })
       })
+
+        })
+      }
+
+      await getDepartments();
         
     
     break;
@@ -105,6 +120,7 @@ async function masterSwitch(){
 
     async function getManagers(){
       let getRoleArray = [];
+      let managerIndex;
 
       db.query('SELECT job_title FROM roles', async function(err,results){
         for(const element of results){
@@ -115,7 +131,7 @@ async function masterSwitch(){
           let result;
           let nameArray = [];
 
-          db.query('SELECT first_name, last_name FROM employees', async function (err, results){
+          db.query('SELECT first_name, last_name, id FROM employees', async function (err, results){
             for(const element of results){
               let fullName = element.first_name + " " + element.last_name;
               nameArray.push(fullName);
@@ -123,26 +139,34 @@ async function masterSwitch(){
 
             await prompts.addEmployeePrompts(getRoleArray, nameArray).then((response) => {
               employee = response;
+              
 
-              db.query('SELECT * FROM roles', async function (err, results) {
-                employeeTable = results;
-                // console.log(employeeTable);
-          
-                for(const element of employeeTable){
-                  if(element.job_title == employee.employeeRole){
-                    
-                    employeeIndex = element.id;
-                    // console.log(employeeIndex);
+              
+              db.query('SELECT CONCAT(first_name," ", last_name) AS name, id FROM employees', async function(err, result){
+                for(const element of result){
+                  if(employee.employeeManager == element.name){
+                    managerIndex = element.id;
                   }
+ 
                 }
-          
-                db.query(await queries.addEmployee(employee, employeeIndex) , function (err, results) {
-                  console.log("Role Added");
+
+                db.query('SELECT * FROM roles', async function (err, results) {
+                  employeeTable = results;
+                  
+            
+                  for(const element of employeeTable){
+                    if(element.job_title == employee.employeeRole){
+                      
+                      employeeIndex = element.id;
+                      
+                    }
+                  }
+            
+                  db.query(await queries.addEmployee(employee, employeeIndex, managerIndex) , function (err, results) {
+                    console.log("Employee Added");
+                  })
                 })
               })
-
-
-
             })
           })
         }
@@ -152,8 +176,7 @@ async function masterSwitch(){
     }
 
     await getManagers();
-    // let employee = await prompts.addEmployeePrompts();
-    // console.log(employee.employeeRole)
+
 
 
 
@@ -171,7 +194,7 @@ async function masterSwitch(){
           
           roleArray.push(element.job_title);
 
-          console.log(element.job_title);
+          
 
         }
 
@@ -179,11 +202,11 @@ async function masterSwitch(){
 
           let result;
           
-          console.log(roleArray);
+          
     
           db.query('SELECT first_name, last_name FROM employees', async function (err,results){
     
-            console.log(results);
+            
     
             for(const element of results){
     
@@ -191,7 +214,7 @@ async function masterSwitch(){
                 nameArray.push(fullName);
             }
             
-            console.log(nameArray);
+            
     
             
     
@@ -200,7 +223,7 @@ async function masterSwitch(){
     
             result = response;
     
-            console.log(result);
+            
     
             const splitName = result.selectEmployee.split(' ');
             const firstName = splitName[0];
@@ -208,14 +231,13 @@ async function masterSwitch(){
             let updateIndex;
 
     
-            // console.log(firstName);
-            // console.log(lastName);
+
     
               //---------generate roles table and look for similar first and last names------
     
             db.query('SELECT * FROM roles', async function (err, results) {
               updateTable = results;
-              console.log(updateTable);
+              
     
               for(const element of updateTable){
                 if(result.selectRole == element.job_title){
@@ -223,12 +245,8 @@ async function masterSwitch(){
                 }
               }
     
-              // console.log(firstName);
-              // console.log(lastName);
-              // console.log(updateIndex);
-    
               db.query(await queries.updateEmployeeRole(firstName, lastName, updateIndex) , function (err, results) {
-                console.log("Role Added");
+                console.log("Employee Updated!");
               })
 
             })
@@ -259,10 +277,15 @@ async function masterSwitch(){
 
 //--------------------Initiate Application------------------------
 
-function init(){
-  console.log("Init Fired!");
-  masterSwitch();
+async function init(){
+
+  let welcomeRequest = await prompts.welcomePrompts();
+  await masterSwitch(welcomeRequest);
+
 }
 
 init();
+
+
+
 

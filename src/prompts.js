@@ -1,16 +1,4 @@
 const inquirer = require('inquirer');
-const mysql = require('mysql2');
-
-// Connect to database
-const db = mysql.createConnection(
-    {
-      host: 'localhost',
-      user: 'root',
-      password: 'password123',
-      database: 'tracker_db'
-    },
-    console.log(`Connected to the tracker_db database.`)
-);
 
 //-----------------------Welcome Screen Prompts-------------------------
 
@@ -18,12 +6,15 @@ async function welcomePrompts() {
 
     let welcomeResponse;
     
+    
+   
+    
     await inquirer.prompt([
 
         {
             type: 'list',
-            name: 'welcomePrompts',
-            message: 'What would you like to do? ',
+            name: 'masterPrompts',
+            message: 'What would you like to do?',
             choices: [
                 'View All Departments',
                 'View All Roles',
@@ -34,12 +25,12 @@ async function welcomePrompts() {
                 'Update Employee Role',
  
             ],
-            default: 'I dont want to add any more team members'     
+            default: 'View All Departments'    
         },
     ])
-    .then((userChoice) => {
+    .then((masterPrompts) => {
 
-        welcomeResponse = userChoice;
+        welcomeResponse = masterPrompts;
 
     }
 
@@ -76,7 +67,7 @@ return Promise.resolve(departmentResponse);
 
 //-----------------------Add Role Prompts-------------------------
 
-async function addRolePrompts() {
+async function addRolePrompts(departmentArray) {
 
     let roleResponse;
     
@@ -98,13 +89,8 @@ async function addRolePrompts() {
             type: 'list',
             name: 'roleDepartment',
             message: 'Which department does the role belong to? ',
-            choices: [
-                'Sales',
-                'Engineering',
-                'Finance',
-                'Legal',
-            ],
-            default: 'default'     
+            choices: departmentArray,
+            default: 'Sales'     
         },
     ])
     .then((response) => {
@@ -192,7 +178,7 @@ async function updateEmployeePrompts(nameArray, roleArray) {
 
         updateResponse = response;
 
-        console.log("Updated Employee's Role");
+        
 
     }
 

@@ -1,26 +1,11 @@
 
 const prompts = require("./prompts");
-const mysql = require('mysql2');
-
-
-// Connect to database
-const db = mysql.createConnection(
-    {
-      host: 'localhost',
-      user: 'root',
-      password: 'password123',
-      database: 'tracker_db'
-    },
-    console.log(`Connected to the tracker_db database.`)
-  );
-  
-
 
 //---------------------------------Functions----------------------------------
 
 async function viewDepartments(){
 
-    const queryString = "SELECT * FROM departments;";
+    const queryString = "SELECT id, department_name AS Name FROM departments;";
 
     return queryString;
 
@@ -29,7 +14,7 @@ async function viewDepartments(){
 async function viewRoles(){
 
     const queryString = `SELECT
-    roles.id, roles.job_title, departments.department_name, roles.salary 
+    roles.id, roles.job_title AS Title, departments.department_name AS Department, roles.salary AS Salary
     FROM roles 
     JOIN departments ON roles.department_id = departments.id`;
 
@@ -39,14 +24,8 @@ async function viewRoles(){
 
 async function viewEmployees() {
 
-    // const queryString = `SELECT 
-    // first.id, first.first_name, first.last_name, roles.job_title , departments.department_name, roles.salary, first.manager_id
-    // FROM employees first 
-    // JOIN roles ON first.role_id = roles.id 
-    // JOIN departments ON departments.id = roles.department_id;`;
-
     const queryString = `SELECT 
-    first.id, first.first_name, first.last_name, roles.job_title , departments.department_name, roles.salary, second.first_name AS manager
+    first.id, first.first_name, first.last_name, roles.job_title , departments.department_name AS department, roles.salary, CONCAT(second.first_name,' ', second.last_name) AS manager
     FROM employees first 
     JOIN roles ON first.role_id = roles.id 
     JOIN departments ON departments.id = roles.department_id
@@ -71,10 +50,6 @@ async function addDepartment(){
 
 async function addRole(role, roleIndex){
 
-    console.log(role.roleName);
-    console.log(roleIndex);
-    console.log(role.roleSalary);
-
     const queryString = `INSERT INTO roles (job_title, department_id, salary)
     VALUES ("${role.roleName}",${roleIndex}, ${role.roleSalary}.00)`;
 
@@ -82,26 +57,17 @@ async function addRole(role, roleIndex){
 
 }
 
-async function addEmployee(employee, employeeIndex){
-
-    console.log(employee.employeeFirstName);
-    console.log(employee.employeeLastName);
-    console.log(employeeIndex);
+async function addEmployee(employee, employeeIndex, managerIndex){
 
 
-    const queryString = `INSERT INTO employees (first_name, last_name, role_id)
-    VALUES ("${employee.employeeFirstName}", "${employee.employeeLastName}", ${employeeIndex});`;
+    const queryString = `INSERT INTO employees (first_name, last_name, role_id, manager_id)
+    VALUES ("${employee.employeeFirstName}", "${employee.employeeLastName}", ${employeeIndex}, ${managerIndex});`;
 
     return queryString;
    
 }
 
 async function updateEmployeeRole(firstName, lastName, updateIndex) {
-
-    
-    console.log(firstName);
-    console.log(lastName);
-    console.log(updateIndex);
 
     const queryString = `UPDATE employees
     SET role_id = ${updateIndex}
